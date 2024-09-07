@@ -89,7 +89,7 @@ export function LoginForm() {
         )}
         <div className="text-center w-full">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?
+            Don&apos;t have an account?
           </p>
           <Button className="underline" variant="link" asChild>
             <Link href="/signup">Sign up</Link>
@@ -102,5 +102,9 @@ export function LoginForm() {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <Button>{pending ? "Logging in..." : "Login"}</Button>;
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? "Logging in..." : "Login"}
+    </Button>
+  );
 }

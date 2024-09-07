@@ -121,5 +121,9 @@ export function SignupForm() {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <Button>{pending ? "Logging in..." : "Sign up"}</Button>;
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending ? "Logging in..." : "Sign up"}
+    </Button>
+  );
 }

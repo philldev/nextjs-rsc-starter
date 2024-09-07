@@ -5,8 +5,6 @@ dotenv.config({
   path: [".env", ".env.local"],
 });
 
-console.log(process.env.DATABASE_URL);
-
 export default defineConfig({
   driver: "turso",
   dialect: "sqlite",
