@@ -13,9 +13,13 @@ export default async function TodosLayoutPage({
   return (
     <div className="flex h-screen w-screen items-center justify-center px-0 sm:px-10">
       <Wrapper>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Sidebar currentUser={<CurrentUser />} />
-        </Suspense>
+        <Sidebar
+          currentUser={
+            <Suspense fallback={<div>Loading...</div>}>
+              <CurrentUser />
+            </Suspense>
+          }
+        />
         <Main>{children}</Main>
 
         <Suspense fallback={<div>Loading...</div>}>
