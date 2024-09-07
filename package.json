@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "drizzle-kit migrate && next dev",
-    "build": "next build",
-    "start": "drizzle-kit migrate && next start",
+    "build": "drizzle-kit migrate && next build",
+    "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
