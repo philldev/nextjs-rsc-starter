@@ -5,7 +5,7 @@ import { Todo } from "@/lib/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
 import { deleteTodo, toggleTodo, updateTodoAction } from "./_actions";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useFormState } from "react-dom";
@@ -18,25 +18,31 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useTodosOptimistic } from "./_todos-optimistic";
 
 export function TodoItem({ todo }: { todo: Todo }) {
-  const { dispatch } = useTodosOptimistic();
+  const { dispatch, startTransition } = useTodosOptimistic();
 
   async function handleToggle() {
+    startTransition(() =>
+      dispatch({
+        type: "update",
+        id: todo.id,
+        payload: {
+          completed: !todo.completed,
+        },
+      }),
+    );
+
     toggleTodo(todo);
-    dispatch({
-      type: "update",
-      id: todo.id,
-      payload: {
-        completed: !todo.completed,
-      },
-    });
   }
 
   async function handleDelete() {
+    startTransition(() =>
+      dispatch({
+        type: "delete",
+        id: todo.id,
+      }),
+    );
+
     deleteTodo(todo);
-    dispatch({
-      type: "delete",
-      id: todo.id,
-    });
   }
 
   const [isEditing, setIsEditing] = useState(todo.editing);
@@ -52,9 +58,8 @@ export function TodoItem({ todo }: { todo: Todo }) {
   return (
     <li
       className={cn(
-        "flex items-center gap-2",
+        "flex items-center gap-2 -mr-2",
         "animate-in fade-in duration-500",
-        "group",
       )}
     >
       <Checkbox

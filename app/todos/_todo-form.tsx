@@ -4,7 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { createTodo } from "./_actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader } from "lucide-react";
@@ -25,7 +25,7 @@ import { v4 as uuidv4 } from "uuid";
 type FormFields = z.infer<typeof CreateTodoSchema>;
 
 export function TodoForm() {
-  const { dispatch } = useTodosOptimistic();
+  const { dispatch, startTransition } = useTodosOptimistic();
 
   const [state, action] = useFormState(createTodo, {
     fields: {
@@ -65,22 +65,24 @@ export function TodoForm() {
         ref={formRef}
         className={cn(
           "flex flex-col group gap-2 items-end p-3 border-border border rounded-xl ring-1 ring-transparent",
-          "absolute bg-card inset-x-3 bottom-3",
+          "absolute bg-card inset-x-3 bottom-3 z-10",
           "transition-all duration-300 ease-in-out",
           focused && "ring-ring",
         )}
         action={action}
         onSubmit={(evt) => {
           evt.preventDefault();
-          form.handleSubmit(() => {
+          form.handleSubmit(({ title }) => {
             form.reset();
-            dispatch({
-              type: "add",
-              payload: {
-                title: state.fields.title,
-                id: uuidv4(),
-              },
-            });
+            startTransition(() =>
+              dispatch({
+                type: "add",
+                payload: {
+                  title,
+                  id: uuidv4(),
+                },
+              }),
+            );
             action(new FormData(formRef.current!));
           })(evt);
         }}

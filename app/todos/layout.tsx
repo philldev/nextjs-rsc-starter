@@ -67,5 +67,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 }
 
 function Main({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col w-full relative">{children}</div>;
+  return (
+    <div className="flex flex-col w-full relative bg-muted/10">{children}</div>
+  );
 }

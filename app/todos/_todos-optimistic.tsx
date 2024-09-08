@@ -1,6 +1,9 @@
 "use client";
 
 import { Todo } from "@/lib/drizzle/schema";
+import { cn } from "@/lib/utils";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { Loader } from "lucide-react";
 import * as React from "react";
 
 type Action =
@@ -25,6 +28,8 @@ type State = {
 const Context = React.createContext<{
   todos: Todo[];
   dispatch: React.Dispatch<Action>;
+  pending: boolean;
+  startTransition: React.TransitionStartFunction;
 } | null>(null);
 
 function reducer(state: State, action: Action): State {
@@ -76,6 +81,8 @@ interface TodosProviderProps {
 }
 
 export function TodosProvider({ children, initialTodos }: TodosProviderProps) {
+  const [pending, startTransition] = React.useTransition();
+
   const [state, dispatch] = React.useOptimistic(
     {
       todos: initialTodos ?? [],
@@ -84,8 +91,26 @@ export function TodosProvider({ children, initialTodos }: TodosProviderProps) {
   );
 
   return (
-    <Context.Provider value={{ todos: state.todos, dispatch }}>
+    <Context.Provider
+      value={{ todos: state.todos, dispatch, pending, startTransition }}
+    >
       {children}
     </Context.Provider>
+  );
+}
+
+export function PendingTransitionSpinner() {
+  const { pending } = useTodosOptimistic();
+
+  return (
+    <div className="rounded-sm border-border z-50 w-max absolute top-2 right-2">
+      <ReloadIcon
+        className={cn(
+          "w-3 h-3 text-muted-foreground data-[hidden=true]:hidden",
+          pending && "animate-[spin_3.5s_linear_infinite] opacity-100",
+          !pending && "opacity-0",
+        )}
+      />
+    </div>
   );
 }

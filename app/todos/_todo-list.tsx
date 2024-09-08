@@ -3,9 +3,14 @@
 import { TodoItem } from "./_todo-item";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTodosOptimistic } from "./_todos-optimistic";
+import { useEffect } from "react";
 
 export function TodoList() {
   const { todos } = useTodosOptimistic();
+
+  useEffect(() => {
+    console.log("mounted");
+  }, []);
 
   if (todos.length === 0) {
     return (

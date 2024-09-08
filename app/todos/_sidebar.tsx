@@ -32,7 +32,7 @@ export function Sidebar(props: SidebarProps) {
   }
 
   return (
-    <div className="hidden w-[var(--sidebar-width)] p-4 px-3 border-r border-border absolute left-0 top-0 bottom-0 flex-col justify-between sm:flex bg-zinc-900/30">
+    <div className="hidden w-[var(--sidebar-width)] p-4 px-3 border-r border-border absolute left-0 top-0 bottom-0 flex-col justify-between sm:flex">
       <div className="grid gap-1">
         {paths.map((date) => (
           <Button

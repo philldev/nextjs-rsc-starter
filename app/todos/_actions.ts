@@ -140,8 +140,6 @@ export async function toggleTodo(todo: Todo) {
       and(eq(todoTable.id, todo.id), eq(todoTable.userId, session.user.id)),
     );
 
-  revalidatePath("/todos");
-
   return {
     success: true,
   };
@@ -212,8 +210,6 @@ export async function updateTodoAction(
         eq(todoTable.userId, session.user.id),
       ),
     );
-
-  revalidatePath("/todos");
 
   return {};
 }
