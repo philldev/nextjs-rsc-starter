@@ -30,7 +30,7 @@ export function SignupForm() {
   });
 
   return (
-    <Card className={cn("w-full max-w-md")}>
+    <Card className={cn("w-full max-w-md border-transparent sm:border-border")}>
       <CardHeader>
         <CardTitle className="flex mb-2 justify-between items-center">
           <span>Sign up</span>

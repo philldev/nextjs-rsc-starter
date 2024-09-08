@@ -29,7 +29,7 @@ export function LoginForm() {
   });
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-transparent sm:border-border">
       <CardHeader>
         <CardTitle className="flex mb-2 justify-between items-center">
           <span>Login</span>

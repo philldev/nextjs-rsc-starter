@@ -50,7 +50,9 @@ export function Sidebar(props: SidebarProps) {
         ))}
       </div>
       <div className="grid gap-2">
-        {props.currentUser}
+        <div className="w-full flex text-xs px-3 justify-between rounded-full text-muted-foreground">
+          {props.currentUser}
+        </div>
 
         <Button
           disabled={pending}

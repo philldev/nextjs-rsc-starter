@@ -23,7 +23,13 @@ export default async function TodosLayoutPage({
         <Main>{children}</Main>
 
         <Suspense fallback={<div>Loading...</div>}>
-          <MenuBar />
+          <MenuBar
+            currentUser={
+              <Suspense fallback={<div>Loading...</div>}>
+                <CurrentUser />
+              </Suspense>
+            }
+          />
         </Suspense>
       </Wrapper>
     </div>
@@ -43,11 +49,7 @@ async function getCurrentUser() {
 async function CurrentUser() {
   const currentUser = await getCurrentUser();
 
-  return (
-    <div className="w-full flex text-xs px-3 justify-between rounded-full text-muted-foreground">
-      {currentUser?.username}
-    </div>
-  );
+  return currentUser?.username;
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {

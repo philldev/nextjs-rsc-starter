@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { validateRequest } from "../_actions";
 import { db } from "@/lib/drizzle/db";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { todoTable } from "@/lib/drizzle/schema";
 import Todos from "../_todos";
 
@@ -22,6 +22,7 @@ export default async function Today() {
     })
     .from(todoTable)
     .orderBy(desc(todoTable.createdAt))
+    .where(eq(todoTable.userId, user.id))
     .limit(15);
 
   return <Todos todos={todos} />;
