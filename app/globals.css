@@ -11,7 +11,7 @@
 
   --sidebar-width: 200px;
 
-  --card-height: clamp(500px, 90vh, 700px);
+  --card-height: clamp(500px, 90svh, 700px);
 
   --card-width: calc(500px + var(--sidebar-width));
 
@@ -22,7 +22,7 @@
 @media (max-width: 640px) {
   :root {
     --todo-form-height: 122px;
-    --card-height: 100vh;
+    --card-height: 100svh;
   }
 }
 

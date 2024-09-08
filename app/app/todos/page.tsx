@@ -31,17 +31,9 @@ export default async function Today() {
 
   return (
     <TodosProvider initialTodos={todos}>
-      <div className="flex flex-col flex-1 h-full relative">
+      <div className="flex flex-col flex-1 h-full">
         <TodosHeader />
-
-        <ScrollArea
-          className={cn(
-            "sm:h-[calc(var(--card-height)-var(--todo-form-height))]",
-            "h-[calc(100vh_-_var(--menu-bar-height)-30px)]",
-          )}
-        >
-          <TodoList />
-        </ScrollArea>
+        <TodoList />
         <TodoForm />
       </div>
     </TodosProvider>
