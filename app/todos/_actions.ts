@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { CreateTodoSchema } from "./_schemas";
 
 export const validateRequest = cache(
   async (): Promise<
@@ -69,14 +70,8 @@ export async function logout() {
   return redirect("/login");
 }
 
-const CreateTodoSchema = z.object({
-  title: z.string().min(1, "Please enter a todo"),
-});
-
-type FormFields = z.infer<typeof CreateTodoSchema>;
-
 type CreateTodoFormState = {
-  fields: FormFields;
+  fields: Record<string, string>;
   error?: string;
   success?: boolean;
 };
@@ -85,9 +80,12 @@ export const createTodo = async (
   _: CreateTodoFormState,
   formData: FormData,
 ): Promise<CreateTodoFormState> => {
-  const fields = Object.fromEntries(formData) as FormFields;
+  const result = CreateTodoSchema.safeParse(Object.fromEntries(formData));
 
-  const result = CreateTodoSchema.safeParse(fields);
+  const fields: Record<string, string> = {};
+  for (const key of Object.keys(Object.fromEntries(formData))) {
+    fields[key] = formData.get(key)?.toString() ?? "";
+  }
 
   if (!result.success) {
     const { fieldErrors } = result.error.flatten();

@@ -4,10 +4,23 @@ import { useFormState, useFormStatus } from "react-dom";
 import { createTodo } from "./_actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { CreateTodoSchema } from "./_schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+type FormFields = z.infer<typeof CreateTodoSchema>;
 
 export function TodoForm() {
   const [state, action] = useFormState(createTodo, {
@@ -16,16 +29,15 @@ export function TodoForm() {
     },
   });
 
+  const form = useForm<FormFields>({
+    resolver: zodResolver(CreateTodoSchema),
+    defaultValues: {
+      title: "",
+      ...state.fields,
+    },
+  });
+
   const formRef = useRef<HTMLFormElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  if (inputRef.current && state.error) {
-    inputRef.current.focus();
-  }
-
-  if (formRef.current && state.success) {
-    formRef.current.reset();
-  }
 
   const [focused, setFocused] = useState(false);
 
@@ -33,45 +45,65 @@ export function TodoForm() {
     setFocused(true);
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = () => {
     setFocused(false);
-    e.target.value = "";
   };
 
+  useEffect(() => {
+    form.setValue("title", state.fields.title, {
+      shouldDirty: false,
+    });
+  }, [state.fields]);
+
   return (
-    <form
-      ref={formRef}
-      className={cn(
-        "flex flex-col group gap-2 items-end p-3 border-border border rounded-xl",
-        "absolute bg-card inset-x-3 bottom-3",
-        "transition-all duration-300 ease-in-out",
-      )}
-      action={action}
-    >
-      <Input
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        ref={inputRef}
-        placeholder={state.error ?? "Create a new todo..."}
-        name="title"
-        defaultValue={state.fields.title}
+    <Form {...form}>
+      <form
+        ref={formRef}
         className={cn(
-          "h-8 w-full border-transparent px-0",
-          "focus-visible:ring-transparent",
+          "flex flex-col group gap-2 items-end p-3 border-border border rounded-xl ring-1 ring-transparent",
+          "absolute bg-card inset-x-3 bottom-3",
+          "transition-all duration-300 ease-in-out",
+          focused && "ring-ring",
         )}
-      />
-      <SubmitButton focused={focused} />
-    </form>
+        action={action}
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          form.handleSubmit(() => {
+            action(new FormData(formRef.current!));
+          })(evt);
+        }}
+      >
+        <FormField
+          name="title"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input
+                  onFocus={handleFocus}
+                  placeholder="Create a new todo..."
+                  className="pl-0 border-0 focus-visible:ring-transparent text-xs h-8"
+                  {...field}
+                  onBlur={handleBlur}
+                />
+              </FormControl>
+              <FormMessage className="text-[.7rem] mt-0" />
+            </FormItem>
+          )}
+        />
+        <SubmitButton />
+      </form>
+    </Form>
   );
 }
 
-function SubmitButton(props: { focused: boolean }) {
+function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
     <Button
+      className="relative"
       variant="secondary"
-      className={cn(props.focused ? "opacity-100" : "opacity-0", "w-[120px]")}
       size="sm"
       type="submit"
       disabled={pending}
@@ -79,10 +111,13 @@ function SubmitButton(props: { focused: boolean }) {
       <Loader
         data-hidden={!pending}
         className={cn(
-          "w-4 h-4 animate-[spin_3.5s_linear_infinite] text-muted-foreground data-[hidden=true]:hidden",
+          "w-4 h-4 animate-[spin_3.5s_linear_infinite] text-muted-foreground data-[hidden=true]:hidden absolute",
         )}
       />
-      <span className={cn("data-[hidden=true]:hidden")} data-hidden={pending}>
+      <span
+        className={cn("data-[hidden=true]:opacity-0")}
+        data-hidden={pending}
+      >
         Create
       </span>
     </Button>
