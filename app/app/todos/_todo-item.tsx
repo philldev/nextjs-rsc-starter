@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Todo } from "@/lib/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
-import { deleteTodo, toggleTodo, updateTodoAction } from "./_actions";
+import { deleteTodo, toggleTodo, updateTodoAction } from "./@actions";
 import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -12,17 +12,13 @@ import { useFormState } from "react-dom";
 import { toast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UpdateTodoSchema } from "./_schemas";
+import { UpdateTodoSchema } from "./@schemas";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useTodosOptimistic } from "./_todos-optimistic";
 
 export function TodoItem({ todo }: { todo: Todo }) {
   const { dispatch, startTransition } = useTodosOptimistic();
-
-  useEffect(() => {
-    console.log("mounted", todo);
-  }, []);
 
   async function handleToggle() {
     startTransition(() =>

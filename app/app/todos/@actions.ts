@@ -1,74 +1,13 @@
 "use server";
 
-import { lucia } from "@/lib/lucia/auth";
-import { cookies } from "next/headers";
-import { cache } from "react";
-import { Session, User } from "lucia";
 import { db } from "@/lib/drizzle/db";
-import { Todo, todoTable } from "@/lib/drizzle/schema";
-import { z } from "zod";
-import { v4 as uuidv4 } from "uuid";
-import { revalidatePath } from "next/cache";
+import { todoTable, Todo } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
-import { CreateTodoSchema, UpdateTodoSchema } from "./_schemas";
-
-export const validateRequest = cache(
-  async (): Promise<
-    { user: User; session: Session } | { user: null; session: null }
-  > => {
-    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-    if (!sessionId) {
-      return {
-        user: null,
-        session: null,
-      };
-    }
-
-    const result = await lucia.validateSession(sessionId);
-    // next.js throws when you attempt to set cookie when rendering page
-    try {
-      if (result.session && result.session.fresh) {
-        const sessionCookie = lucia.createSessionCookie(result.session.id);
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes,
-        );
-      }
-      if (!result.session) {
-        const sessionCookie = lucia.createBlankSessionCookie();
-        cookies().set(
-          sessionCookie.name,
-          sessionCookie.value,
-          sessionCookie.attributes,
-        );
-      }
-    } catch {}
-    return result;
-  },
-);
-
-export async function logout() {
-  const { session } = await validateRequest();
-  if (!session) {
-    return {
-      error: "Unauthorized",
-    };
-  }
-
-  await lucia.invalidateSession(session.id);
-
-  const sessionCookie = lucia.createBlankSessionCookie();
-
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
-
-  return redirect("/login");
-}
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { validateRequest } from "../_actions";
+import { v4 as uuidv4 } from "uuid";
+import { CreateTodoSchema, UpdateTodoSchema } from "./@schemas";
 
 type CreateTodoFormState = {
   fields: Record<string, string>;
@@ -113,7 +52,7 @@ export const createTodo = async (
     description: "",
   });
 
-  revalidatePath("/todos");
+  revalidatePath("/app/todos");
 
   return {
     fields: {
@@ -140,6 +79,8 @@ export async function toggleTodo(todo: Todo) {
       and(eq(todoTable.id, todo.id), eq(todoTable.userId, session.user.id)),
     );
 
+  revalidatePath("/app/todos");
+
   return {
     success: true,
   };
@@ -161,7 +102,7 @@ export async function deleteTodo(todo: Todo) {
       and(eq(todoTable.id, todo.id), eq(todoTable.userId, session.user.id)),
     );
 
-  revalidatePath("/todos");
+  revalidatePath("/app/todos");
 
   return {
     success: true,
@@ -210,6 +151,8 @@ export async function updateTodoAction(
         eq(todoTable.userId, session.user.id),
       ),
     );
+
+  revalidatePath("/app/todos");
 
   return {};
 }

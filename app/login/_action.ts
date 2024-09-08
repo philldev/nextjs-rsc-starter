@@ -30,10 +30,6 @@ interface FormState {
   error?: string;
 }
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export async function formAction(
   _: FormState,
   formData: FormData,
@@ -90,5 +86,5 @@ export async function formAction(
     sessionCookie.attributes,
   );
 
-  redirect("/todos");
+  redirect("/app");
 }

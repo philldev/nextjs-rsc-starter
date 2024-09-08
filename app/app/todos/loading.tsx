@@ -1,4 +1,4 @@
-import TodosLoading from "../_todos-loading";
+import TodosLoading from "./_todos-loading";
 
 export default function Loading() {
   return <TodosLoading />;

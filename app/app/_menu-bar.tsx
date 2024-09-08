@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { InboxIcon, LogOutIcon, UserIcon } from "lucide-react";
 import * as React from "react";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "./_actions";
 
@@ -60,7 +59,7 @@ export function MenuBar(props: MenuBarProps) {
 
       <Button variant="ghost" size="sm" className="flex-1">
         <InboxIcon className="h-4 w-4 mr-2" />
-        <span className="text-sm">Inbox</span>
+        <span className="text-sm">Todos</span>
       </Button>
     </div>
   );

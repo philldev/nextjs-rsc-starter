@@ -3,7 +3,6 @@
 import { Todo } from "@/lib/drizzle/schema";
 import { cn } from "@/lib/utils";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { Loader } from "lucide-react";
 import * as React from "react";
 
 type Action =
