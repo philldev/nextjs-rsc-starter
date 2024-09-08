@@ -10,34 +10,43 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useFormState } from "react-dom";
 import { toast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UpdateTodoSchema } from "./_schemas";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { useTodosOptimistic } from "./_todos-optimistic";
 
 export function TodoItem({ todo }: { todo: Todo }) {
-  const [_, startTransition] = useTransition();
+  const { dispatch } = useTodosOptimistic();
 
   async function handleToggle() {
-    startTransition(() => {
-      toggleTodo(todo);
+    toggleTodo(todo);
+    dispatch({
+      type: "update",
+      id: todo.id,
+      payload: {
+        completed: !todo.completed,
+      },
     });
   }
 
   async function handleDelete() {
-    startTransition(() => {
-      deleteTodo(todo);
+    deleteTodo(todo);
+    dispatch({
+      type: "delete",
+      id: todo.id,
     });
   }
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(todo.editing);
 
   async function handleEdit() {
-    startTransition(() => {
-      setIsEditing(true);
-    });
+    setIsEditing(true);
   }
 
   function handleCancelEdit() {
-    startTransition(() => {
-      setIsEditing(false);
-    });
+    setIsEditing(false);
   }
 
   return (
@@ -97,6 +106,8 @@ export function TodoItem({ todo }: { todo: Todo }) {
   );
 }
 
+type FormFields = z.infer<typeof UpdateTodoSchema>;
+
 function EditTodoForm({
   todo,
   onCancel,
@@ -104,10 +115,18 @@ function EditTodoForm({
   todo: Todo;
   onCancel: () => void;
 }) {
+  const { dispatch } = useTodosOptimistic();
+
   const [state, action] = useFormState(updateTodoAction, {
-    fields: {
+    fields: {},
+  });
+
+  const form = useForm<FormFields>({
+    resolver: zodResolver(UpdateTodoSchema),
+    defaultValues: {
       title: todo.title,
       id: todo.id,
+      ...state.fields,
     },
   });
 
@@ -120,22 +139,6 @@ function EditTodoForm({
     }
   }, [state.error]);
 
-  useEffect(() => {
-    if (state.errors?.title || state.errors?.id) {
-      let description = state.errors?.title || state.errors?.id;
-      toast({
-        title: "Invalid Input",
-        description,
-      });
-    }
-  }, [state.errors?.title, state.errors?.id]);
-
-  useEffect(() => {
-    if (state.success) {
-      onCancel();
-    }
-  }, [state.success]);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -144,33 +147,65 @@ function EditTodoForm({
     }
   }, [inputRef.current]);
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
-    <form action={action} className="flex gap-2 flex-1 ease-in-out">
-      <input type="hidden" name="id" defaultValue={todo.id} />
-      <Input
-        ref={inputRef}
-        name="title"
-        defaultValue={state.fields?.title}
-        placeholder="Title"
-        className="flex-1 h-8"
-      />
-      <Button
-        className="animate-in fade-in duration-500"
-        type="submit"
-        size="sm"
-        variant="secondary"
+    <Form {...form}>
+      <form
+        action={action}
+        ref={formRef}
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          form.handleSubmit(({ id, title }) => {
+            dispatch({
+              type: "update",
+              id,
+              payload: {
+                title,
+              },
+            });
+            onCancel();
+            action(new FormData(formRef.current!));
+          })(evt);
+        }}
+        className="flex gap-2 flex-1 ease-in-out"
       >
-        Save
-      </Button>
-      <Button
-        className="animate-in fade-in duration-500"
-        onClick={onCancel}
-        type="button"
-        size="sm"
-        variant="outline"
-      >
-        Cancel
-      </Button>
-    </form>
+        <input type="hidden" name="id" defaultValue={todo.id} />
+        <FormField
+          name="title"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormControl>
+                <Input
+                  {...field}
+                  ref={inputRef}
+                  name="title"
+                  placeholder="Title"
+                  className="flex-1 h-8"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button
+          className="animate-in fade-in duration-500"
+          type="submit"
+          size="sm"
+          variant="secondary"
+        >
+          Save
+        </Button>
+        <Button
+          className="animate-in fade-in duration-500"
+          onClick={onCancel}
+          type="button"
+          size="sm"
+          variant="outline"
+        >
+          Cancel
+        </Button>
+      </form>
+    </Form>
   );
 }

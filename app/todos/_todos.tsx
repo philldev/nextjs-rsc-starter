@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { TodoForm } from "./_todo-form";
 import { TodoList } from "./_todo-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TodosProvider } from "./_todos-optimistic";
 
 export default function Todos({
   todos,
@@ -10,16 +11,18 @@ export default function Todos({
   todos: Todo[];
 }>) {
   return (
-    <div className="flex flex-col flex-1 h-full relative">
-      <ScrollArea
-        className={cn(
-          "sm:h-[calc(var(--card-height)-var(--todo-form-height))]",
-          "h-[calc(100vh_-_var(--menu-bar-height)-30px)]",
-        )}
-      >
-        <TodoList todos={todos} />
-      </ScrollArea>
-      <TodoForm />
-    </div>
+    <TodosProvider initialTodos={todos}>
+      <div className="flex flex-col flex-1 h-full relative">
+        <ScrollArea
+          className={cn(
+            "sm:h-[calc(var(--card-height)-var(--todo-form-height))]",
+            "h-[calc(100vh_-_var(--menu-bar-height)-30px)]",
+          )}
+        >
+          <TodoList />
+        </ScrollArea>
+        <TodoForm />
+      </div>
+    </TodosProvider>
   );
 }

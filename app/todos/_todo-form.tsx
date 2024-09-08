@@ -19,10 +19,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CreateTodoSchema } from "./_schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTodosOptimistic } from "./_todos-optimistic";
+import { v4 as uuidv4 } from "uuid";
 
 type FormFields = z.infer<typeof CreateTodoSchema>;
 
 export function TodoForm() {
+  const { dispatch } = useTodosOptimistic();
+
   const [state, action] = useFormState(createTodo, {
     fields: {
       title: "",
@@ -69,6 +73,14 @@ export function TodoForm() {
         onSubmit={(evt) => {
           evt.preventDefault();
           form.handleSubmit(() => {
+            form.reset();
+            dispatch({
+              type: "add",
+              payload: {
+                title: state.fields.title,
+                id: uuidv4(),
+              },
+            });
             action(new FormData(formRef.current!));
           })(evt);
         }}

@@ -1,12 +1,12 @@
-import type { Todo } from "@/lib/drizzle/schema";
+"use client";
+
 import { TodoItem } from "./_todo-item";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTodosOptimistic } from "./_todos-optimistic";
 
-interface TodoListProps {
-  todos: Todo[];
-}
+export function TodoList() {
+  const { todos } = useTodosOptimistic();
 
-export function TodoList({ todos }: TodoListProps) {
   if (todos.length === 0) {
     return (
       <div className="p-4 flex flex-col space-y-4">

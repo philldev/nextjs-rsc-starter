@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { CreateTodoSchema } from "./_schemas";
+import { CreateTodoSchema, UpdateTodoSchema } from "./_schemas";
 
 export const validateRequest = cache(
   async (): Promise<
@@ -170,20 +170,9 @@ export async function deleteTodo(todo: Todo) {
   };
 }
 
-const UpdateTodoSchema = z.object({
-  title: z.string().min(1, "Please enter a todo"),
-  id: z.string().uuid(),
-});
-
-type UpdateTodoFormFields = z.infer<typeof UpdateTodoSchema>;
-
 type UpdateTodoFormState = {
-  fields?: UpdateTodoFormFields;
-  errors?: {
-    [K in keyof UpdateTodoFormFields]?: string;
-  };
+  fields?: Record<string, string>;
   error?: string;
-  success?: boolean;
 };
 
 export async function updateTodoAction(
@@ -200,22 +189,15 @@ export async function updateTodoAction(
     return {
       fields,
       error: "You must be logged in to update a todo",
-      success: false,
     };
   }
 
   const result = UpdateTodoSchema.safeParse(fields);
 
   if (!result.success) {
-    const { fieldErrors } = result.error.flatten();
-
     return {
       fields,
-      errors: {
-        title: fieldErrors.title?.[0],
-        id: fieldErrors.id?.[0],
-      },
-      success: false,
+      error: result.error.issues[0].message,
     };
   }
 
@@ -233,7 +215,5 @@ export async function updateTodoAction(
 
   revalidatePath("/todos");
 
-  return {
-    success: true,
-  };
+  return {};
 }

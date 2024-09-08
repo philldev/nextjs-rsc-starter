@@ -63,4 +63,6 @@ export const todoSchema = selectTodosSchema.pick({
   createdAt: true,
 });
 
-export type Todo = z.infer<typeof todoSchema>;
+export type Todo = z.infer<typeof todoSchema> & {
+  editing?: boolean;
+};
