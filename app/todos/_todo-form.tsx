@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Loader } from "lucide-react";
 
 export function TodoForm() {
   const [state, action] = useFormState(createTodo, {
@@ -41,10 +42,9 @@ export function TodoForm() {
     <form
       ref={formRef}
       className={cn(
-        "flex flex-col group sm:flex-row gap-2 items-end sm:items-center p-3 border-border border sm:border-x-0 sm:border-b-0 rounded-xl sm:rounded-none",
-        "absolute sm:static bg-card inset-x-3 bottom-3",
+        "flex flex-col group gap-2 items-end p-3 border-border border rounded-xl",
+        "absolute bg-card inset-x-3 bottom-3",
         "transition-all duration-300 ease-in-out",
-        focused ? "bg-zinc-900/40" : "bg-card",
       )}
       action={action}
     >
@@ -70,12 +70,21 @@ function SubmitButton(props: { focused: boolean }) {
 
   return (
     <Button
+      variant="secondary"
       className={cn(props.focused ? "opacity-100" : "opacity-0", "w-[120px]")}
       size="sm"
       type="submit"
       disabled={pending}
     >
-      {pending ? "Creating..." : "Create"}
+      <Loader
+        data-hidden={!pending}
+        className={cn(
+          "w-4 h-4 animate-[spin_3.5s_linear_infinite] text-muted-foreground data-[hidden=true]:hidden",
+        )}
+      />
+      <span className={cn("data-[hidden=true]:hidden")} data-hidden={pending}>
+        Create
+      </span>
     </Button>
   );
 }

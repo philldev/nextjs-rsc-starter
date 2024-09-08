@@ -58,7 +58,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
       className={cn(
         "bg-card w-full max-w-[var(--card-width)] relative grid overflow-hidden",
         "rounded-none h-screen",
-        "sm:rounded-xl sm:border sm:h-[420px] sm:pl-[var(--sidebar-width)] pb-[var(--menu-bar-height)] sm:pb-0",
+        "sm:rounded-xl sm:border h-[var(--card-height)] sm:pl-[var(--sidebar-width)] pb-[var(--menu-bar-height)] sm:pb-0",
       )}
     >
       {children}
