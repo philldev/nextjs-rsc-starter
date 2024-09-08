@@ -20,6 +20,10 @@ import { useTodosOptimistic } from "./_todos-optimistic";
 export function TodoItem({ todo }: { todo: Todo }) {
   const { dispatch, startTransition } = useTodosOptimistic();
 
+  useEffect(() => {
+    console.log("mounted", todo);
+  }, []);
+
   async function handleToggle() {
     startTransition(() =>
       dispatch({
@@ -82,10 +86,6 @@ export function TodoItem({ todo }: { todo: Todo }) {
           >
             {todo.title}
           </label>
-
-          <span className="text-muted-foreground text-xs">
-            {todo.createdAt.toLocaleDateString()}
-          </span>
 
           <Button
             onClick={handleEdit}

@@ -18,12 +18,11 @@ export default async function Today() {
       title: todoTable.title,
       completed: todoTable.completed,
       description: todoTable.description,
-      createdAt: todoTable.createdAt,
     })
     .from(todoTable)
     .orderBy(desc(todoTable.createdAt))
     .where(eq(todoTable.userId, user.id))
     .limit(15);
 
-  return <Todos todos={todos} />;
+  return <Todos todos={todos.map((todo) => ({ ...todo, editing: false }))} />;
 }

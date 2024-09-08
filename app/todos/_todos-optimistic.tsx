@@ -41,7 +41,6 @@ function reducer(state: State, action: Action): State {
             ...action.payload,
             completed: false,
             editing: false,
-            createdAt: new Date(),
           },
           ...state.todos,
         ],

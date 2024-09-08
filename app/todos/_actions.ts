@@ -106,7 +106,7 @@ export const createTodo = async (
   }
 
   await db.insert(todoTable).values({
-    id: uuidv4(),
+    id: formData.get("id")?.toString() ?? uuidv4(),
     userId: session.user.id,
     title: result.data.title,
     completed: false,

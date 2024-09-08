@@ -74,16 +74,19 @@ export function TodoForm() {
           evt.preventDefault();
           form.handleSubmit(({ title }) => {
             form.reset();
+            const id = uuidv4();
+            const formData = new FormData(formRef.current!);
+            formData.set("id", id);
             startTransition(() =>
               dispatch({
                 type: "add",
                 payload: {
                   title,
-                  id: uuidv4(),
+                  id,
                 },
               }),
             );
-            action(new FormData(formRef.current!));
+            action(formData);
           })(evt);
         }}
       >

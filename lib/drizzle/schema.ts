@@ -60,7 +60,6 @@ export const todoSchema = selectTodosSchema.pick({
   id: true,
   title: true,
   completed: true,
-  createdAt: true,
 });
 
 export type Todo = z.infer<typeof todoSchema> & {
