@@ -99,7 +99,7 @@ export function TodoForm() {
                 <Input
                   onFocus={handleFocus}
                   placeholder="Create a new todo..."
-                  className="pl-0 border-0 focus-visible:ring-transparent text-xs h-8"
+                  className="pl-0 border-0 focus-visible:ring-transparent text-xs h-8 shadow-none"
                   {...field}
                   onBlur={handleBlur}
                 />
