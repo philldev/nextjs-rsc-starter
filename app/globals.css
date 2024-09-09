@@ -8,13 +8,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
   --sidebar-width: 200px;
-
   --card-height: clamp(500px, 90svh, 700px);
-
   --card-width: calc(500px + var(--sidebar-width));
-
   --menu-bar-height: 64px;
   --todo-form-height: 57px;
 }

@@ -2,25 +2,63 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { SearchIcon } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import { SEARCH_QUERY_KEY } from "./@constants";
 import { useTodosOptimistic } from "./_todos-optimistic";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 
 export function TodosHeader() {
-  const { pending, startTransition } = useTodosOptimistic();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const { pending, startTransition } = useTodosOptimistic();
 
   const handleRefresh = () => {
     startTransition(() => router.refresh());
   };
 
+  const handleSearch = useDebouncedCallback((value: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    if (value?.trim() === "") {
+      newSearchParams.delete(SEARCH_QUERY_KEY);
+    } else {
+      newSearchParams.set(SEARCH_QUERY_KEY, value);
+    }
+
+    startTransition(() =>
+      router.replace(`${pathname}?${newSearchParams.toString()}`),
+    );
+  }, 500);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchQuery = searchParams.get(SEARCH_QUERY_KEY);
+
+  // Reset the input value when the search is cleared
+  useEffect(() => {
+    if (inputRef.current) {
+      if (searchQuery === null) {
+        inputRef.current.value = "";
+      }
+    }
+  }, [searchQuery]);
+
   return (
     <header className="p-4 pb-0 flex items-center gap-4">
       <div className="flex-1 relative flex items-center">
-        <SearchIcon className="h-4 w-4 absolute left-3" />
-        <Input className="flex-1 h-8 pl-10" placeholder="Search" />
+        <SearchIcon className="h-4 w-4 absolute left-3 text-muted-foreground" />
+        <Input
+          ref={inputRef}
+          defaultValue={searchParams.get("search")?.toString()}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="flex-1 h-8 pl-10 text-xs"
+          placeholder="Search"
+        />
       </div>
 
       <Button

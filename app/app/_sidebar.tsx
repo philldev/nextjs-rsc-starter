@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { CheckIcon, HandCoins, LaptopIcon, LogOutIcon } from "lucide-react";
+import { CheckIcon, LaptopIcon, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "./_actions";
