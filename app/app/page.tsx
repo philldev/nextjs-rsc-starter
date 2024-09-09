@@ -8,5 +8,5 @@ export default async function TodosPage() {
     redirect("/login");
   }
 
-  return null;
+  redirect("/app/todos");
 }

@@ -37,8 +37,6 @@ export default async function Today({
     search = searchQuery;
   }
 
-  console.log(search);
-
   const todos = await db
     .select({
       id: todoTable.id,

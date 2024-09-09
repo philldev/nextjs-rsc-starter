@@ -91,7 +91,7 @@ export function Sidebar(props: SidebarProps) {
           <span className="text-muted-foreground">{props.currentUser}</span>
 
           <Image
-            src="https://avatar.iran.liara.run/public"
+            src={`https://avatar.iran.liara.run/public/${props.currentUser}`}
             width={22}
             height={22}
             alt="Avatar"

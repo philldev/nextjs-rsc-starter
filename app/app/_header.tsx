@@ -10,7 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import Image from "next/image";
 import { PAGES } from "./@constants";
@@ -23,6 +29,7 @@ import { toast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { logout } from "./@actions";
 import { getHeaderTitle } from "./@utils";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 interface HeaderProps {
   currentUser: React.ReactNode;
@@ -60,6 +67,11 @@ export function Header(props: HeaderProps) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72">
+            <VisuallyHidden>
+              <SheetTitle>Menu</SheetTitle>
+              <SheetDescription>Sidebar menu</SheetDescription>
+            </VisuallyHidden>
+
             <nav className="py-4 flex flex-col gap-4 h-full">
               <div>
                 <Link href="/app" className="font-bold">
@@ -108,7 +120,7 @@ export function Header(props: HeaderProps) {
             className="overflow-hidden rounded-full h-8 w-8 text-muted-foreground"
           >
             <Image
-              src="https://avatar.iran.liara.run/public"
+              src={`https://avatar.iran.liara.run/public/${props.currentUser}`}
               width={36}
               height={36}
               alt="Avatar"

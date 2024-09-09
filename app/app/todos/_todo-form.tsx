@@ -81,8 +81,6 @@ export function TodoForm() {
     }
   };
 
-  console.log(form.formState.errors);
-
   return (
     <Form {...form}>
       <form
@@ -96,7 +94,6 @@ export function TodoForm() {
         action={action}
         onSubmit={(evt) => {
           evt.preventDefault();
-          console.log("submit");
           form.handleSubmit(({ title }) => {
             const id = uuidv4();
             const formData = new FormData(formRef.current!);
