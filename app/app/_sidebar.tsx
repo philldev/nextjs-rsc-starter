@@ -4,30 +4,14 @@ import { Button } from "@/components/ui/button";
 import { CheckIcon, LaptopIcon, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { logout } from "./_actions";
+import { logout } from "./@actions";
 import { useTransition } from "react";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 import * as React from "react";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const routes = [
-  { name: "Todos", href: "/app/todos", icon: CheckIcon },
-  // {
-  //   name: "Expenses",
-  //   href: "/app/expenses",
-  //   icon: HandCoins,
-  // },
-];
+import { PAGES } from "./@constants";
+import { ModeToggle } from "./_mode-toggle";
 
 interface SidebarProps {
   currentUser: React.ReactNode;
@@ -58,19 +42,19 @@ export function Sidebar(props: SidebarProps) {
         </div>
 
         <div className="grid gap-1">
-          {routes.map((route) => (
+          {PAGES.map((page) => (
             <Link
-              key={route.href}
-              href={route.href}
+              key={page.href}
+              href={page.href}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 h-8 text-xs transition-all hover:text-primary",
-                pathname.includes(route.href)
+                pathname.includes(page.href)
                   ? "text-primary bg-muted"
                   : "text-muted-foreground bg-transparent",
               )}
             >
-              <route.icon className="h-4 w-4" />
-              {route.name}
+              <page.icon className="h-4 w-4" />
+              {page.name}
             </Link>
           ))}
         </div>
@@ -90,41 +74,5 @@ export function Sidebar(props: SidebarProps) {
         </Button>
       </div>
     </div>
-  );
-}
-
-export function ModeToggle() {
-  const { setTheme, theme } = useTheme();
-
-  const Icon =
-    theme === "light" ? SunIcon : theme === "dark" ? MoonIcon : LaptopIcon;
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-between rounded-full text-foreground/90"
-        >
-          <span>Theme</span>
-
-          <span>
-            <Icon className="h-4 w-4 text-muted-foreground" />
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }

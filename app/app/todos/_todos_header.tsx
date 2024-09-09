@@ -49,7 +49,7 @@ export function TodosHeader() {
   }, [searchQuery]);
 
   return (
-    <header className="p-4 pb-0 flex items-center gap-4">
+    <header className="p-4 flex items-center gap-4 sticky top-0 z-10 bg-card pb-4">
       <div className="flex-1 relative flex items-center">
         <SearchIcon className="h-4 w-4 absolute left-3 text-muted-foreground" />
         <Input

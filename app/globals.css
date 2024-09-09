@@ -12,6 +12,8 @@
   --card-height: clamp(500px, 90svh, 700px);
   --card-width: calc(500px + var(--sidebar-width));
   --menu-bar-height: 64px;
+  --header-height: 64px;
+
   --todo-form-height: 57px;
 }
 

@@ -15,7 +15,7 @@ import { InboxIcon, LogOutIcon, UserIcon } from "lucide-react";
 import * as React from "react";
 
 import { usePathname } from "next/navigation";
-import { logout } from "./_actions";
+import { logout } from "./@actions";
 
 interface MenuBarProps {
   currentUser: React.ReactNode;
@@ -29,7 +29,7 @@ export function MenuBar(props: MenuBarProps) {
       className={cn(
         "h-[var(--menu-bar-height)] w-full sm:hidden",
         "absolute inset-x-0 bottom-0",
-        "flex items-center gap-4 justify-between px-3",
+        "flex items-center gap-4 px-3 justify-between",
         "bg-card border-t rounded-t-xl",
       )}
     >
@@ -38,7 +38,6 @@ export function MenuBar(props: MenuBarProps) {
           <Button
             variant={pathname.startsWith("/todos/user") ? "default" : "ghost"}
             size="sm"
-            className="flex-1"
           >
             <UserIcon className="h-4 w-4 mr-2" />
             <span className="text-sm">{props.currentUser}</span>
@@ -57,7 +56,7 @@ export function MenuBar(props: MenuBarProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Button variant="ghost" size="sm" className="flex-1">
+      <Button variant="ghost" size="sm">
         <InboxIcon className="h-4 w-4 mr-2" />
         <span className="text-sm">Todos</span>
       </Button>

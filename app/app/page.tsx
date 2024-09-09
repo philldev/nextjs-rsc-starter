@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { validateRequest } from "./_actions";
+import { validateRequest } from "./@actions";
 
 export default async function TodosPage() {
   const { user } = await validateRequest();

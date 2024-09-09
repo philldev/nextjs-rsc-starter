@@ -24,7 +24,7 @@ export function TodoList() {
   };
 
   return (
-    <div className="p-4 ">
+    <div className="p-4 pt-0 pb-32">
       {isSearching ? (
         <div className="py-2 h-8 flex items-center text-sm text-muted-foreground mb-4 gap-4">
           <Badge

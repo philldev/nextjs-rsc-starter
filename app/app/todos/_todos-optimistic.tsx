@@ -36,12 +36,12 @@ function reducer(state: State, action: Action): State {
     case "add":
       return {
         todos: [
+          ...state.todos,
           {
             ...action.payload,
             completed: false,
             editing: false,
           },
-          ...state.todos,
         ],
       };
     case "update":

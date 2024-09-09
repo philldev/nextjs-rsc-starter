@@ -5,7 +5,7 @@ import { todoTable, Todo } from "@/lib/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { validateRequest } from "../_actions";
+import { validateRequest } from "../@actions";
 import { v4 as uuidv4 } from "uuid";
 import { CreateTodoSchema, UpdateTodoSchema } from "./@schemas";
 

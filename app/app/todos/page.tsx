@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { validateRequest } from "../_actions";
+import { validateRequest } from "../@actions";
 import { db } from "@/lib/drizzle/db";
-import { and, desc, eq, like } from "drizzle-orm";
+import { and, asc, desc, eq, like } from "drizzle-orm";
 import { todoTable } from "@/lib/drizzle/schema";
 import { TodoForm } from "./_todo-form";
 import { TodoList } from "./_todo-list";
@@ -47,7 +47,7 @@ export default async function Today({
       description: todoTable.description,
     })
     .from(todoTable)
-    .orderBy(desc(todoTable.createdAt))
+    .orderBy(asc(todoTable.createdAt))
     .where(and(eq(todoTable.userId, user.id), getSearchFilter(search)))
     .limit(TODOS_SELECT_LIMIT);
 
