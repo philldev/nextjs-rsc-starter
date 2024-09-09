@@ -20,6 +20,7 @@ interface SidebarProps {
 
 export function Sidebar(props: SidebarProps) {
   const pathname = usePathname();
+
   const [pending, startTransition] = useTransition();
 
   function handleLogout() {
