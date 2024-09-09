@@ -11,23 +11,17 @@ export default async function TodosLayoutPage({
 }: {
   children: React.ReactNode;
 }) {
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    redirect("/login");
+  }
+
   return (
     <div className="flex h-[100svh] w-screen items-center justify-center px-0 sm:px-10">
       <Wrapper>
-        <Header
-          currentUser={
-            <Suspense fallback={"Loading..."}>
-              <CurrentUser />
-            </Suspense>
-          }
-        />
-        <Sidebar
-          currentUser={
-            <Suspense fallback={"Loading..."}>
-              <CurrentUser />
-            </Suspense>
-          }
-        />
+        <Header username={currentUser.username} />
+        <Sidebar username={currentUser.username} />
         <Main>{children}</Main>
       </Wrapper>
     </div>
@@ -42,12 +36,6 @@ async function getCurrentUser() {
   }
 
   return result.user;
-}
-
-async function CurrentUser() {
-  const currentUser = await getCurrentUser();
-
-  return currentUser?.username;
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {

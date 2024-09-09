@@ -56,7 +56,7 @@ export function TodosHeader() {
           ref={inputRef}
           defaultValue={searchParams.get("search")?.toString()}
           onChange={(e) => handleSearch(e.target.value)}
-          className="flex-1 h-8 pl-10 text-xs"
+          className="flex-1 pl-10"
           placeholder="Search"
         />
       </div>
@@ -66,7 +66,7 @@ export function TodosHeader() {
         onClick={handleRefresh}
         size="icon"
         variant="outline"
-        className={cn("h-8 w-8", pending && "bg-muted")}
+        className={cn(pending && "bg-muted")}
       >
         <ReloadIcon
           className={cn(

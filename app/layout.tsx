@@ -27,7 +27,7 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </head>
-      <body className={cn("antialiased", inter.className)}>
+      <body className={cn("antialiased bg-blue-800", inter.className)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

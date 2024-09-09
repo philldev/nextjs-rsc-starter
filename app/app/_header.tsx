@@ -32,7 +32,7 @@ import { getHeaderTitle } from "./@utils";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 interface HeaderProps {
-  currentUser: React.ReactNode;
+  username: string;
 }
 
 export function Header(props: HeaderProps) {
@@ -120,7 +120,7 @@ export function Header(props: HeaderProps) {
             className="overflow-hidden rounded-full h-8 w-8 text-muted-foreground"
           >
             <Image
-              src={`https://avatar.iran.liara.run/public/${props.currentUser}`}
+              src={`https://avatar.iran.liara.run/username?username=${props.username}`}
               width={36}
               height={36}
               alt="Avatar"
@@ -131,7 +131,7 @@ export function Header(props: HeaderProps) {
         <DropdownMenuContent align="end" className="w-44">
           <DropdownMenuLabel className="text-xs text-muted-foreground flex items-center gap-2">
             <span>👋</span>
-            {props.currentUser}
+            {props.username}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem

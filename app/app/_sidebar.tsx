@@ -15,7 +15,7 @@ import { ModeToggle } from "./_mode-toggle";
 import Image from "next/image";
 
 interface SidebarProps {
-  currentUser: React.ReactNode;
+  username: string;
 }
 
 export function Sidebar(props: SidebarProps) {
@@ -88,14 +88,14 @@ export function Sidebar(props: SidebarProps) {
             "hover:bg-transparent",
           )}
         >
-          <span className="text-muted-foreground">{props.currentUser}</span>
+          <span className="text-muted-foreground">{props.username}</span>
 
           <Image
-            src={`https://avatar.iran.liara.run/public/${props.currentUser}`}
+            src={`https://avatar.iran.liara.run/username?username=${props.username}`}
             width={22}
             height={22}
             alt="Avatar"
-            className="overflow-hidden rounded-full"
+            className="overflow-hidden rounded-full border border-border"
           />
         </div>
 
