@@ -52,7 +52,6 @@ export function TodoForm() {
 
   const handleBlur = () => {
     setFocused(false);
-    form.reset();
   };
 
   useEffect(() => {
@@ -82,6 +81,8 @@ export function TodoForm() {
     }
   };
 
+  console.log(form.formState.errors);
+
   return (
     <Form {...form}>
       <form
@@ -95,8 +96,8 @@ export function TodoForm() {
         action={action}
         onSubmit={(evt) => {
           evt.preventDefault();
+          console.log("submit");
           form.handleSubmit(({ title }) => {
-            form.reset();
             const id = uuidv4();
             const formData = new FormData(formRef.current!);
             formData.set("id", id);
@@ -120,9 +121,10 @@ export function TodoForm() {
             <FormItem className="w-full space-y-0">
               <textarea
                 {...field}
+                name="title"
                 rows={1}
                 placeholder="Create a new todo..."
-                className="pl-0 focus-visible:ring-transparent shadow-none bg-transparent ring-0 border-0 outline-0 resize-none w-full"
+                className="pl-0 focus-visible:ring-transparent shadow-none bg-transparent ring-0 border-0 outline-0 resize-none w-ful outline-none"
                 ref={textareaRef}
                 onBlur={handleBlur}
                 onFocus={handleFocus}

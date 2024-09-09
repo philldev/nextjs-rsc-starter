@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Todo } from "@/lib/drizzle/schema";
 import { cn } from "@/lib/utils";
-import { Pencil, Trash2 } from "lucide-react";
+import { InfoIcon, Pencil, Trash2 } from "lucide-react";
 import { deleteTodo, toggleTodo, updateTodoAction } from "./@actions";
 import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,6 +17,11 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useTodosOptimistic } from "./_todos-optimistic";
 import { Separator } from "@/components/ui/separator";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function TodoItem({ todo }: { todo: Todo }) {
   const { dispatch, startTransition } = useTodosOptimistic();
@@ -74,7 +79,7 @@ export function TodoItem({ todo }: { todo: Todo }) {
         <EditTodoForm todo={todo} onCancel={handleCancelEdit} />
       ) : (
         <>
-          <div className="pl-2 md:pr-16">
+          <div className="pl-2 md:pr-4 flex-1">
             <label
               className={cn(
                 "text-foreground/80",
@@ -85,31 +90,47 @@ export function TodoItem({ todo }: { todo: Todo }) {
               {todo.title}
             </label>
           </div>
-          <div
-            className={cn(
-              "absolute right-0 -top-1 bg-card p-1 rounded-md border border-border w-max h-max flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-            )}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={handleEdit}
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-muted-foreground/80"
+              >
+                <InfoIcon className="h-4 w-4" aria-hidden />
+                <span className="sr-only">Options</span>
+              </Button>
+            </PopoverTrigger>
+
+            <PopoverContent
+              align="end"
+              className="w-max p-1 shadow-lg flex items-center"
             >
-              <Pencil className="h-4 w-4" aria-hidden />
-              <span className="sr-only">Edit</span>
-            </Button>
-            <Separator orientation="vertical" className="mx-1 h-6" />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={handleDelete}
-            >
-              <Trash2 className="h-4 w-4" aria-hidden />
-              <span className="sr-only">Delete</span>
-            </Button>
-          </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit();
+                }}
+              >
+                <Pencil className="h-4 w-4" aria-hidden />
+                <span className="sr-only">Edit</span>
+              </Button>
+              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleDelete}
+              >
+                <Trash2 className="h-4 w-4" aria-hidden />
+                <span className="sr-only">Delete</span>
+              </Button>
+            </PopoverContent>
+          </Popover>
         </>
       )}
     </li>
@@ -125,7 +146,7 @@ function EditTodoForm({
   todo: Todo;
   onCancel: () => void;
 }) {
-  const { dispatch } = useTodosOptimistic();
+  const { dispatch, startTransition } = useTodosOptimistic();
 
   const [state, action] = useFormState(updateTodoAction, {
     fields: {},
@@ -154,6 +175,9 @@ function EditTodoForm({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.focus();
+      let val = textareaRef.current.value;
+      textareaRef.current.value = "";
+      textareaRef.current.value = val;
     }
   }, [textareaRef.current]);
 
@@ -188,13 +212,15 @@ function EditTodoForm({
         onSubmit={(evt) => {
           evt.preventDefault();
           form.handleSubmit(({ id, title }) => {
-            dispatch({
-              type: "update",
-              id,
-              payload: {
-                title,
-              },
-            });
+            startTransition(() =>
+              dispatch({
+                type: "update",
+                id,
+                payload: {
+                  title,
+                },
+              }),
+            );
             onCancel();
             action(new FormData(formRef.current!));
           })(evt);
@@ -214,7 +240,7 @@ function EditTodoForm({
                   ref={textareaRef}
                   name="title"
                   placeholder="Title"
-                  className="flex-1 h-8 text-[16px] w-full resize-none bg-transparent outline-0 ring-0 border-0 shadow-none"
+                  className="flex-1 h-8 text-[16px] w-full resize-none bg-transparent outline-0 ring-0 border-0 shadow-none outline-none"
                 />
               </FormControl>
             </FormItem>
