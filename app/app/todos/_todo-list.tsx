@@ -50,7 +50,7 @@ export function TodoList() {
           No todos found for &ldquo;{searchQuery}&rdquo; 😴
         </div>
       ) : null}
-      <ul className="flex flex-col space-y-4">
+      <ul className="flex flex-col space-y-2">
         {todos.map((todo) => (
           <TodoItem key={todo.id} todo={todo} />
         ))}

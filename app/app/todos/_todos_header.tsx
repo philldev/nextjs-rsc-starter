@@ -66,7 +66,7 @@ export function TodosHeader() {
         onClick={handleRefresh}
         size="icon"
         variant="outline"
-        className={cn(pending && "bg-muted")}
+        className={cn(pending && "bg-muted", "bg-transparent")}
       >
         <ReloadIcon
           className={cn(

@@ -7,7 +7,6 @@ import { InfoIcon, Pencil, Trash2 } from "lucide-react";
 import { deleteTodo, toggleTodo, updateTodoAction } from "./@actions";
 import { useEffect, useRef, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { useFormState } from "react-dom";
 import { toast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
@@ -69,17 +68,19 @@ export function TodoItem({ todo }: { todo: Todo }) {
         "relative",
       )}
     >
-      <Checkbox
-        onCheckedChange={handleToggle}
-        id={todo.id}
-        checked={todo.completed}
-        className="mt-[5px]"
-      />
+      <div>
+        <Checkbox
+          onCheckedChange={handleToggle}
+          id={todo.id}
+          checked={todo.completed}
+          className="mt-[8px]"
+        />
+      </div>
       {isEditing ? (
         <EditTodoForm todo={todo} onCancel={handleCancelEdit} />
       ) : (
         <>
-          <div className="pl-2 md:pr-4 flex-1">
+          <div className="pl-2 md:pr-4 flex-1 pt-1">
             <label
               className={cn(
                 "text-foreground/80",
@@ -96,7 +97,7 @@ export function TodoItem({ todo }: { todo: Todo }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 text-muted-foreground/80"
+                className="h-8 w-8 text-muted-foreground/80"
               >
                 <InfoIcon className="h-4 w-4" aria-hidden />
                 <span className="sr-only">Options</span>

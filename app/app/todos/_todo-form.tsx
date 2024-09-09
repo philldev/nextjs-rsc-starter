@@ -87,9 +87,9 @@ export function TodoForm() {
         ref={formRef}
         className={cn(
           "flex flex-col group gap-2 items-end p-3 border-border border rounded-xl ring-1 ring-transparent",
-          "absolute bg-card inset-x-3 bottom-3 z-10",
+          "absolute bg-card/20 inset-x-3 bottom-3 z-10",
           "transition-all duration-300 ease-in-out",
-          focused && "ring-ring",
+          focused && "ring-ring bg-card/50",
         )}
         action={action}
         onSubmit={(evt) => {
@@ -144,7 +144,6 @@ function SubmitButton() {
     <Button
       className="relative"
       variant="secondary"
-      size="sm"
       type="submit"
       disabled={pending}
     >
