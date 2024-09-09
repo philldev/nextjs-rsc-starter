@@ -19,16 +19,32 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./_mode-toggle";
 import { LogOutIcon } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useTransition } from "react";
+import { logout } from "./@actions";
+import { getHeaderTitle } from "./@utils";
 
-function getHeaderTitle(pathname: string) {
-  const page = PAGES.find((page) => page.href === pathname);
-
-  return page?.name;
+interface HeaderProps {
+  currentUser: React.ReactNode;
 }
 
-export function Header() {
+export function Header(props: HeaderProps) {
   const pathname = usePathname();
   const title = getHeaderTitle(pathname);
+  const [, startTransition] = useTransition();
+
+  function handleLogout() {
+    startTransition(async () => {
+      const result = await logout();
+      if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive",
+        });
+      }
+    });
+  }
 
   return (
     <header className="flex-grow-0 h-[var(--header-height)] w-full border-b border-border flex items-center gap-4 px-4 sm:hidden">
@@ -103,10 +119,13 @@ export function Header() {
         <DropdownMenuContent align="end" className="w-44">
           <DropdownMenuLabel className="text-xs text-muted-foreground flex items-center gap-2">
             <span>👋</span>
-            User name
+            {props.currentUser}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="flex items-center justify-between">
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="flex items-center justify-between"
+          >
             Sign out
             <LogOutIcon className="h-4 w-4 text-muted-foreground" />
           </DropdownMenuItem>

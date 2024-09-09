@@ -42,6 +42,7 @@ export function TodoForm() {
   });
 
   const formRef = useRef<HTMLFormElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [focused, setFocused] = useState(false);
 
@@ -51,6 +52,7 @@ export function TodoForm() {
 
   const handleBlur = () => {
     setFocused(false);
+    form.reset();
   };
 
   useEffect(() => {
@@ -58,6 +60,27 @@ export function TodoForm() {
       shouldDirty: false,
     });
   }, [state.fields]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [form.watch("title")]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && e.shiftKey) {
+      // If Shift + Enter is pressed, add a new line
+      e.preventDefault();
+      form.setValue("title", form.getValues().title + "\n", {
+        shouldDirty: false,
+      });
+    } else if (e.key === "Enter") {
+      // If only Enter is pressed, prevent the default behavior (submit, etc.)
+      e.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
 
   return (
     <Form {...form}>
@@ -94,16 +117,17 @@ export function TodoForm() {
           name="title"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <Input
-                  onFocus={handleFocus}
-                  placeholder="Create a new todo..."
-                  className="pl-0 border-0 focus-visible:ring-transparent text-xs h-8 shadow-none"
-                  {...field}
-                  onBlur={handleBlur}
-                />
-              </FormControl>
+            <FormItem className="w-full space-y-0">
+              <textarea
+                {...field}
+                rows={1}
+                placeholder="Create a new todo..."
+                className="pl-0 focus-visible:ring-transparent shadow-none bg-transparent ring-0 border-0 outline-0 resize-none w-full"
+                ref={textareaRef}
+                onBlur={handleBlur}
+                onFocus={handleFocus}
+                onKeyDown={handleKeyDown}
+              />
               <FormMessage className="text-[.7rem] mt-0" />
             </FormItem>
           )}

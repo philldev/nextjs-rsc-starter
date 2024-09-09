@@ -24,7 +24,7 @@ export function TodoList() {
   };
 
   return (
-    <div className="p-4 pt-0 pb-32">
+    <div className="p-4 pb-32 pt-4">
       {isSearching ? (
         <div className="py-2 h-8 flex items-center text-sm text-muted-foreground mb-4 gap-4">
           <Badge
@@ -50,7 +50,7 @@ export function TodoList() {
           No todos found for &ldquo;{searchQuery}&rdquo; 😴
         </div>
       ) : null}
-      <ul className="flex flex-col space-y-3">
+      <ul className="flex flex-col space-y-4">
         {todos.map((todo) => (
           <TodoItem key={todo.id} todo={todo} />
         ))}
@@ -61,7 +61,7 @@ export function TodoList() {
 
 export function TodoListLoading() {
   return (
-    <ul className="p-4 space-y-2">
+    <ul className="p-4 space-y-4">
       {Array.from({ length: 5 }).map((_, i) => (
         <Skeleton key={i} className="w-full h-8 rounded-full py-2" />
       ))}

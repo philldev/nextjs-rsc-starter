@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { validateRequest } from "../@actions";
 import { db } from "@/lib/drizzle/db";
-import { and, asc, desc, eq, like } from "drizzle-orm";
+import { and, asc, eq, like } from "drizzle-orm";
 import { todoTable } from "@/lib/drizzle/schema";
 import { TodoForm } from "./_todo-form";
 import { TodoList } from "./_todo-list";

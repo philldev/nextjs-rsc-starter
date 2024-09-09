@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Sidebar } from "./_sidebar";
 import { cn } from "@/lib/utils";
-import { MenuBar } from "./_menu-bar";
 import { validateRequest } from "./@actions";
 import { redirect } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,25 +14,21 @@ export default async function TodosLayoutPage({
   return (
     <div className="flex h-[100svh] w-screen items-center justify-center px-0 sm:px-10">
       <Wrapper>
-        <Header />
+        <Header
+          currentUser={
+            <Suspense fallback={"Loading..."}>
+              <CurrentUser />
+            </Suspense>
+          }
+        />
         <Sidebar
           currentUser={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={"Loading..."}>
               <CurrentUser />
             </Suspense>
           }
         />
         <Main>{children}</Main>
-
-        {/* <Suspense fallback={<div>Loading...</div>}> */}
-        {/*   <MenuBar */}
-        {/*     currentUser={ */}
-        {/*       <Suspense fallback={<div>Loading...</div>}> */}
-        {/*         <CurrentUser /> */}
-        {/*       </Suspense> */}
-        {/*     } */}
-        {/*   /> */}
-        {/* </Suspense> */}
       </Wrapper>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { CheckIcon, LaptopIcon, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import * as React from "react";
 import { PAGES } from "./@constants";
 import { ModeToggle } from "./_mode-toggle";
+import Image from "next/image";
 
 interface SidebarProps {
   currentUser: React.ReactNode;
@@ -35,31 +36,68 @@ export function Sidebar(props: SidebarProps) {
   }
 
   return (
-    <div className="hidden w-[var(--sidebar-width)] p-4 px-3 border-r border-border absolute left-0 top-0 bottom-0 flex-col justify-between sm:flex">
-      <div>
-        <div className="w-full mb-3 flex text-xs px-3 h-8 items-center text-muted-foreground border-border border-b rounded-none">
-          {props.currentUser}
+    <aside
+      className={cn(
+        "absolute left-0 top-0 bottom-0",
+        "w-[var(--sidebar-width)] py-4 px-4",
+        "hidden sm:flex flex-col gap-3",
+        "border-r border-border",
+      )}
+    >
+      <div className="px-3">
+        <Link href="/app" className="font-bold">
+          Listapp
+        </Link>
+      </div>
+      <hr className="border-border" />
+      <nav className="flex-1">
+        <ul className="flex flex-col gap-1">
+          {PAGES.map((page) => (
+            <li key={page.href}>
+              <Link
+                href={page.href}
+                className={cn(
+                  "flex items-center gap-2",
+                  "px-2 h-8 -mx-2",
+                  "rounded-lg text-xs",
+                  "transition-all",
+                  "hover:text-primary",
+                  pathname.includes(page.href)
+                    ? "text-primary bg-muted"
+                    : "text-muted-foreground bg-transparent",
+                )}
+              >
+                <page.icon className="h-4 w-4" />
+                {page.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <hr className="border-border" />
+      <div className="grid gap-2">
+        <div
+          className={cn(
+            buttonVariants({
+              variant: "ghost",
+              size: "sm",
+            }),
+            "w-full justify-between",
+            "rounded-full text-foreground/90",
+            "hover:bg-transparent",
+          )}
+        >
+          <span className="text-muted-foreground">{props.currentUser}</span>
+
+          <Image
+            src="https://avatar.iran.liara.run/public"
+            width={22}
+            height={22}
+            alt="Avatar"
+            className="overflow-hidden rounded-full"
+          />
         </div>
 
-        <div className="grid gap-1">
-          {PAGES.map((page) => (
-            <Link
-              key={page.href}
-              href={page.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 h-8 text-xs transition-all hover:text-primary",
-                pathname.includes(page.href)
-                  ? "text-primary bg-muted"
-                  : "text-muted-foreground bg-transparent",
-              )}
-            >
-              <page.icon className="h-4 w-4" />
-              {page.name}
-            </Link>
-          ))}
-        </div>
-      </div>
-      <div className="grid gap-2 border-border border-t pt-3">
         <ModeToggle />
 
         <Button
@@ -73,6 +111,6 @@ export function Sidebar(props: SidebarProps) {
           <LogOutIcon className="h-4 w-4 text-muted-foreground" />
         </Button>
       </div>
-    </div>
+    </aside>
   );
 }
